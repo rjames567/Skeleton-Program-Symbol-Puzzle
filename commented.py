@@ -8,17 +8,26 @@ import os
 
 
 def Main():
-    Again = "y"
-    Score = 0
-    while Again == "y":
+    Again = "y"  # This sets again to "y", so the while loop will run at least once. This could be a different value, as
+    # long as the condition for the while loop is true. If it were false, the game would never start, and give no option
+    # to run again.
+    Score = 0  # Initialises the variable. This does not serve a purpose, as it will be overwritten later. It is most
+    # likely here because of C++ and other languages, where variables need to be declared before assignment.
+    while Again == "y":  # Starts a new game if the user wishes. If not, the program will end.
         Filename = input("Press Enter to start a standard puzzle or enter name of file to load: ")
-        if len(Filename) > 0:
-            MyPuzzle = Puzzle(Filename + ".txt")
+        if len(Filename) > 0:  # Checks if the user has not just pressed enter only. If they have not, the puzzle can be
+            # loaded from the file
+            MyPuzzle = Puzzle(Filename + ".txt")  # This loads the puzzle from the file. It adds the file extension, so
+            # the user does not need to remember it. This does catch all exceptions from loading the file, but does not
+            # re-prompt the user, instead getting stuck in a loop of asking for a symbol (as there is not a list of valid
+            # characters).
         else:
-            MyPuzzle = Puzzle(8, int(8 * 8 * 0.6))
-        Score = MyPuzzle.AttemptPuzzle()
-        print("Puzzle finished. Your score was: " + str(Score))
-        Again = input("Do another puzzle? ").lower()
+            MyPuzzle = Puzzle(8, int(8 * 8 * 0.6)) # Creates the default game. First argument is the grid size, and
+            # the second is the number of remaining symbols (number of turns). It is grid size (x) * grid size (y) *
+            # scale factor.
+        Score = MyPuzzle.AttemptPuzzle()  # Runs the game. The function returns the user's score.
+        print("Puzzle finished. Your score was: " + str(Score))  # Output the user's score from the game
+        Again = input("Do another puzzle? ").lower()  # .lower method removes case sensitivity for the user input
 
 
 class Puzzle():

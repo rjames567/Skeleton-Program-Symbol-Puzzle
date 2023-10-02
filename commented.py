@@ -104,32 +104,80 @@ class Puzzle():  # Create Puzzle Class. Does not inherit from another class
             # self.__AllowedSymbols = ["Q", "X", "T"]
 
     def __LoadPuzzle(self, Filename):
+        # The parameter Filename needs to include the file extension.
         try:
-            with open(Filename) as f:
-                NoOfSymbols = int(f.readline().rstrip())
-                for Count in range(1, NoOfSymbols + 1):
-                    self.__AllowedSymbols.append(f.readline().rstrip())
-                NoOfPatterns = int(f.readline().rstrip())
-                for Count in range(1, NoOfPatterns + 1):
-                    Items = f.readline().rstrip().split(",")
-                    P = Pattern(Items[0], Items[1])
-                    self.__AllowedPatterns.append(P)
-                self.__GridSize = int(f.readline().rstrip())
-                for Count in range(1, self.__GridSize * self.__GridSize + 1):
-                    Items = f.readline().rstrip().split(",")
-                    if Items[0] == "@":
-                        C = BlockedCell()
-                        self.__Grid.append(C)
+            with open(Filename) as f:  # Open the text file. The mode is not specified, so it is opened as read only.
+                # with open() as f:... opens the file with the object assigned to f. When the code inside the with has
+                # executed, the file is automatically closed.
+                # f.readline reads the current line of the text file. After it has been called, it moves to the next
+                # line, so the next time f.readline() is called, it gives the value of the next line. It also returns a
+                # string, regardless of the datatype in the line. .readline() also includes all trailing whitespace,
+                # including line endings.
+                NoOfSymbols = int(f.readline().rstrip())  # Gets the number from the first line of the text file, and
+                # assigns it to the number of symbols. .rstrip() removes the trailing whitespace from the line,
+                # including the "\n".
+                for Count in range(1, NoOfSymbols + 1):  # This runs NoOfSymbols times.
+                    self.__AllowedSymbols.append(f.readline().rstrip())  # Reads each line, removes the trailing
+                    # whitespace, and adds to the AllowedSymbols list. The line should only contain a single character.
+                NoOfPatterns = int(f.readline().rstrip())  # Gets the next line, which is a number. It casts to an int,
+                # so it can be iterated over using range. This should be the same as NoOfSymbols, as each symbol should
+                # have a corresponding pattern
+                for Count in range(1, NoOfPatterns + 1):  # Iterate NoOfPatterns times. The count variable isn't needed.
+                    Items = f.readline().rstrip().split(",")  # Reads the line, then removes the trailing whitespace,
+                    # then splits into a list on the comma. The first item is the symbol, and the second is the pattern.
+                    P = Pattern(Items[0], Items[1])  # Create a new pattern instance, using the read values.
+                    self.__AllowedPatterns.append(P)  # Add the new pattern to the AllowedPatterns list.
+                self.__GridSize = int(f.readline().rstrip())  # Read the next line from the file, and remove the
+                # trailing whitespace. It is then cast to an integer, so it can be used as the GridSize, and be used
+                # with range for a FOR loop.
+                for Count in range(1, self.__GridSize * self.__GridSize + 1):  # Iterate from 1 to GridSize^2
+                    # (inclusive), which is every available cell in the grid. The count variable is not used.
+                    Items = f.readline().rstrip().split(",")  # Read the next line from the file, remove the trailing
+                    # whitespace, and split on commas. The first value is the current value in the tile, where an empty
+                    # string means the cell is blank. The values after that are the values that cannot be placed in that
+                    # cell.
+
+                    # Note that for blocked tiles, instance.CheckSymbolAllowed() is always false, so the all the symbols
+                    # the user can place do NOT need to be added after it.
+
+                    # Items: length>=2
+                    #   Items[0]: current value in tile ('@' is blocked, '' is empty)
+                    #   Items[1:]: invalid values for tile
+                    if Items[0] == "@":  # Checks whether the cell is blocked
+                        C = BlockedCell()  # Create a new blocked cell instance.
+                        self.__Grid.append(C)  # Add the new cell instance to the grid. The order that they are added
+                        # are the order that they appear on the grid. .append() adds the instance to the end, so it
+                        # fills in the grid from the left to right, each row at a time, from top to bottom.
                     else:
-                        C = Cell()
-                        C.ChangeSymbolInCell(Items[0])
-                        for CurrentSymbol in range(1, len(Items)):
-                            C.AddToNotAllowedSymbols(Items[CurrentSymbol])
-                        self.__Grid.append(C)
-                self.__Score = int(f.readline().rstrip())
-                self.__SymbolsLeft = int(f.readline().rstrip())
-        except:
-            print("Puzzle not loaded")
+                        C = Cell()  # Create a new cell instance.
+                        C.ChangeSymbolInCell(Items[0])  # Change the symbol in the cell to that specified by Items[0].
+                        # Note if Items[0] is an empty string, it does not affect the output. It appears as a space, and
+                        # with no difference to not running this statement.
+                        for CurrentSymbol in range(1, len(Items)):  # Runs len(Items) - 1 times. It needs to run one
+                            # less times than the length of Items, as it should not include Items[0], as that is the
+                            # current symbol in the cell.
+                            C.AddToNotAllowedSymbols(Items[CurrentSymbol])  # Adds the current symbol in Items to the
+                            # list of not allowed symbols. This can add a second space when their is a trailing comma on
+                            # the line. This is good as it prevents the user replaceing a piece they have placed with a
+                            # space.
+                        self.__Grid.append(C)  # Adds the new class instance to the grid. Again, this appends it to the
+                        # end, so it is done in order, left-right.
+                self.__Score = int(f.readline().rstrip())  # Reads the next line from the file, and casts it to an
+                # integer, so it can be added to easily. This is the user's starting score.
+                self.__SymbolsLeft = int(f.readline().rstrip())  # This reads the final line of the file and removes the
+                # trailing whitespace. It then casts it to an integer, so it can be decremented easily, as it is the
+                # number of remaining symbols (the number of moves the user can perform).
+        except:  # Catches all exceptions. This is assumed to be that the file is not found. This is bad practice, as
+            # the error is not specified. It should catch FileNotFoundError. This can be an issue, as it prevents
+            # KeyboardInterrupts, as they are included within this. Furthermore, if the file is not found, it will say
+            # ]file not found, but will not prompt the user for a new one. The game continues, but without a board,
+            # prompting for a row then a column from the user. Once this has happened, it asks for the symbol to be
+            # entered, but the list of valid characters is empty, and therefore, any entered symbol is invalid, so it
+            # re-prompts for another. This means the program gets stuck in an endless loop of asking for a symbol to be
+            # entered. This could be solved by not catching the error here, but instead catching it when the user is
+            # initially prompted for the filename. If it is not valid, it can easily loop around again until a valid
+            # filename is entered found.
+            print("Puzzle not loaded")  # Output to the user that the file has not been loaded successfully.
 
     def AttemptPuzzle(self):
         Finished = False

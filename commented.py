@@ -30,38 +30,78 @@ def Main():
         Again = input("Do another puzzle? ").lower()  # .lower method removes case sensitivity for the user input
 
 
-class Puzzle():
+class Puzzle():  # Create Puzzle Class. Does not inherit from another class
     def __init__(self, *args):
-        if len(args) == 1:
-            self.__Score = 0
-            self.__SymbolsLeft = 0
-            self.__GridSize = 0
-            self.__Grid = []
-            self.__AllowedPatterns = []
-            self.__AllowedSymbols = []
-            self.__LoadPuzzle(args[0])
-        else:
-            self.__Score = 0
-            self.__SymbolsLeft = args[1]
-            self.__GridSize = args[0]
-            self.__Grid = []
-            for Count in range(1, self.__GridSize * self.__GridSize + 1):
-                if random.randrange(1, 101) < 90:
-                    C = Cell()
-                else:
-                    C = BlockedCell()
-                self.__Grid.append(C)
-            self.__AllowedPatterns = []
-            self.__AllowedSymbols = []
-            QPattern = Pattern("Q", "QQ**Q**QQ")
-            self.__AllowedPatterns.append(QPattern)
-            self.__AllowedSymbols.append("Q")
-            XPattern = Pattern("X", "X*X*X*X*X")
-            self.__AllowedPatterns.append(XPattern)
-            self.__AllowedSymbols.append("X")
-            TPattern = Pattern("T", "TTT**T**T")
-            self.__AllowedPatterns.append(TPattern)
-            self.__AllowedSymbols.append("T")
+        if len(args) == 1:  # If args has one item it is is the filename for a game from a text file to open.
+            # *args: 1 item
+            #   args[0] -> puzzle file name.
+            self.__Score = 0  # Set the user's score to 0.
+            self.__SymbolsLeft = 0  # Declare the number of Symbols Left (number of moves for the user) - this is
+            # overwritten by the __LoadPuzzle method call.
+            self.__GridSize = 0  # Declare the grid size. This is again overwritten inn the __LoadPuzzle method call
+            self.__Grid = []  # Declare and assign the Grid variable to an empty array. This is used, and appended to
+            # in the __LoadPuzzle method, so MUST be declared here as an empty list.
+            self.__AllowedPatterns = []  # Declare and assign the allowed patterns variable to an empty array. This is
+            # again added to when the __LoadPuzzle method is called. It uses append, so this MUST be assigned here.
+            self.__AllowedSymbols = []  # Declare and assign the allowed symbols variable to an empty list. This is
+            # then appended to in the __LoadPuzzle method call, so must be assigned to an empty list here.
+            self.__LoadPuzzle(args[0])  # Loads the puzzle from the text file. args[0] is the filename.txt of the puzzle
+            # to load.
+        else:  # This expects args to have two elements.
+            # *args: 2 items (expected,, not enforced)
+            #   args[0] -> Grid Size (Grid is square, so this is for both x * y)
+            #   args[1] -> Number of Symbols remaining (
+            self.__Score = 0  # Sets the score to 0.
+            self.__SymbolsLeft = args[1]  # Set the number of remaining symbols to the second argument.
+            # __SymbolsLeft acts as counter for the number of remaining moves the user has. According to the default
+            # game, the recommended value is GridSize^2 * 0.6
+            self.__GridSize = args[0]  # Sets the grid size for the user board. The board is square, so this is for both
+            # the sides. For the default game, this is 8.
+            self.__Grid = []  # Declares the cell variable, with an empty list. This must be performed, as it is
+            # appended to, to add the Cell and Blocked Cell instances to the board
+            for Count in range(1, self.__GridSize * self.__GridSize + 1):  # Iterates through all tiles that should be
+                # in the grid (grid size squared). This is done as one loop, as the grid is stored as a single-dimension
+                # list. The increment by 1, is because the range runs from 1 -> GridSize^2 + 1, inclusive, then
+                # exclusive. Removing the 1 as first parameter, and removing the increment would also work, and may be
+                # faster.
+                if random.randrange(1, 101) < 90:  # Generate a random number between 1 and 100 (inclusive).
+                    # This gives an 89% chance of a cell being unblocked. It is 89% not 90%, as it is less than 90, not
+                    # inclusive.
+                    C = Cell()  # Create an empty cell instance (indicated by a space)
+                else:  # 11% chance of being a blocked cell.
+                    C = BlockedCell()  # Create a blocked cell instance (represented by an @ symbol)
+                self.__Grid.append(C)  # Add the created class instance the grid list
+            self.__AllowedPatterns = []  # Create an empty list for the valid patterns. It needs to be done, as it is
+            # appended to.
+            self.__AllowedSymbols = []  # Create an empty list for the valid symbols that can be entered by the user.
+            # This needs to be done here, as it is appended to later.
+            QPattern = Pattern("Q", "QQ**Q**QQ")  # Adds the pattern for the Q shape to the
+            # allowed patterns list. * means any value. Symbols are read in a spiral.
+            # Q Q *
+            # Q Q *
+            # * * Q
+            self.__AllowedPatterns.append(QPattern)  # Adds the pattern to the list
+            self.__AllowedSymbols.append("Q")  # Adds the new allowed symbol to the AllowedSymbols list
+            XPattern = Pattern("X", "X*X*X*X*X")  # Create the pattern for the X symbol.
+            # X * X
+            # * X *
+            # X * X
+            self.__AllowedPatterns.append(XPattern)  # Adds the pattern to the list off allowed patterns
+            self.__AllowedSymbols.append("X")  # Add the symbols to the AllowedSymbols list.
+            TPattern = Pattern("T", "TTT**T**T")  # Create a new pattern for the T symbol
+            # T T T
+            # * T *
+            # * T *
+            self.__AllowedPatterns.append(TPattern)  # Adds the new pattern to the AllowedPatterns list.
+            self.__AllowedSymbols.append("T")  # Add the new symbol to the allowed symbols list.
+
+            # This segment could be simplified as:
+            # self.__AllowedPatterns = [
+            #     Pattern("Q", "QQ**Q**QQ"),
+            #     Pattern("X", "X*X*X*X*X"),
+            #     Pattern("T", "TTT**T**T")
+            # ]
+            # self.__AllowedSymbols = ["Q", "X", "T"]
 
     def __LoadPuzzle(self, Filename):
         try:

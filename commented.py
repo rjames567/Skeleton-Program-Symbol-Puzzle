@@ -32,7 +32,7 @@ def Main():
 
 class Puzzle():  # Create Puzzle Class. Does not inherit from another class
     def __init__(self, *args):
-        if len(args) == 1:  # If args has one item it is is the filename for a game from a text file to open.
+        if len(args) == 1:  # If args has one item it is the filename for a game from a text file to open.
             # *args: 1 item
             #   args[0] -> puzzle file name.
             self.__Score = 0  # Set the user's score to 0.
@@ -48,7 +48,7 @@ class Puzzle():  # Create Puzzle Class. Does not inherit from another class
             self.__LoadPuzzle(args[0])  # Loads the puzzle from the text file. args[0] is the filename.txt of the puzzle
             # to load.
         else:  # This expects args to have two elements.
-            # *args: 2 items (expected,, not enforced)
+            # *args: 2 items (expected, not enforced)
             #   args[0] -> Grid Size (Grid is square, so this is for both x * y)
             #   args[1] -> Number of Symbols remaining (
             self.__Score = 0  # Sets the score to 0.
@@ -154,23 +154,23 @@ class Puzzle():  # Create Puzzle Class. Does not inherit from another class
                         # Note if Items[0] is an empty string, it does not affect the output. It appears as a space, and
                         # with no difference to not running this statement.
                         for CurrentSymbol in range(1, len(Items)):  # Runs len(Items) - 1 times. It needs to run one
-                            # less times than the length of Items, as it should not include Items[0], as that is the
+                            # fewer times than the length of Items, as it should not include Items[0], as that is the
                             # current symbol in the cell.
                             C.AddToNotAllowedSymbols(Items[CurrentSymbol])  # Adds the current symbol in Items to the
-                            # list of not allowed symbols. This can add a second space when their is a trailing comma on
-                            # the line. This is good as it prevents the user replaceing a piece they have placed with a
+                            # list of not allowed symbols. This can add a second space when there is a trailing comma on
+                            # the line. This is good as it prevents the user replacing a piece they have placed with a
                             # space.
                         self.__Grid.append(C)  # Adds the new class instance to the grid. Again, this appends it to the
                         # end, so it is done in order, left-right.
                 self.__Score = int(f.readline().rstrip())  # Reads the next line from the file, and casts it to an
-                # integer, so it can be added to easily. This is the user's starting score.
+                # integer, so it can be added easily. This is the user's starting score.
                 self.__SymbolsLeft = int(f.readline().rstrip())  # This reads the final line of the file and removes the
                 # trailing whitespace. It then casts it to an integer, so it can be decremented easily, as it is the
                 # number of remaining symbols (the number of moves the user can perform).
         except:  # Catches all exceptions. This is assumed to be that the file is not found. This is bad practice, as
             # the error is not specified. It should catch FileNotFoundError. This can be an issue, as it prevents
             # KeyboardInterrupts, as they are included within this. Furthermore, if the file is not found, it will say
-            # ]file not found, but will not prompt the user for a new one. The game continues, but without a board,
+            # file not found, but will not prompt the user for a new one. The game continues, but without a board,
             # prompting for a row then a column from the user. Once this has happened, it asks for the symbol to be
             # entered, but the list of valid characters is empty, and therefore, any entered symbol is invalid, so it
             # re-prompts for another. This means the program gets stuck in an endless loop of asking for a symbol to be
@@ -180,46 +180,81 @@ class Puzzle():  # Create Puzzle Class. Does not inherit from another class
             print("Puzzle not loaded")  # Output to the user that the file has not been loaded successfully.
 
     def AttemptPuzzle(self):
-        Finished = False
-        while not Finished:
-            self.DisplayPuzzle()
-            print("Current score: " + str(self.__Score))
-            Row = -1
-            Valid = False
-            while not Valid:
+        Finished = False  # Assign Finished to False. This means the subsequent while loop will run at least once. This
+        # does prevent SymbolsLeft being 0, as it will still allow the user to place one.
+
+        # The while clause could be replaced with:
+        # while not self.__SymbolsRemaining:
+        # This has the benefit of removing one variable and an if statement, which would be more time and space
+        # efficient.
+        while not Finished:  # While the user still has remaining symbols, the loop will continue.
+            self.DisplayPuzzle()  # Display the puzzle grid
+            print("Current score: " + str(self.__Score))  # Display the current user's score. The score needs to be cast
+            # to a string, as integers cannot be concatenated to strings.
+            Row = -1  # Declare the Row variable. This is likely from other programming languages where variables need
+            # to be declared before they can be assigned.
+            Valid = False  # Ensures that the while loop will run at least once.
+            while not Valid:  # Runs until the user enters a valid row number.
                 try:
-                    Row = int(input("Enter row number: "))
-                    Valid = True
-                except:
+                    Row = int(input("Enter row number: "))  # Gets an input from the user. If it can be converted to an
+                    # integer it is then valid, and the loop stops. If it cannot, the except clause runs, and the user
+                    # is prompted again.
+
+                    # This does not check whether the value entered is within the grid. If it is not, it is still
+                    # treated as valid, and can then cause IndexError, when it tries to access a cell outside of this
+                    # range
+                    Valid = True  # Stops the iteration. This does not run if there is an error in the previous line.
+                except:  # This is bad practice, as it stops all errors, including KeyboardInterrupts, so it is
+                    # difficult to stop the program. It should catch ValueError
                     pass
             Column = -1
-            Valid = False
-            while not Valid:
+            Valid = False  # Ensures that the while loop will run at least once.
+            while not Valid:  # Runs until the user enters a valid row number.
                 try:
-                    Column = int(input("Enter column number: "))
-                    Valid = True
-                except:
+                    Column = int(input("Enter column number: "))  # Gets an input from the user. If it can be converted
+                    # to an integer it is then valid, and the loop stops. If it cannot, the except clause runs, and the
+                    # user is prompted again.
+
+                    # This does not check whether the value entered is within the grid. If it is not, it is still
+                    # treated as valid, and can then cause IndexError, when it tries to access a cell outside of this
+                    # range
+                    Valid = True  # Stops the iteration. This does not run if there is an error in the previous line.
+                except:  # This is bad practice, as it stops all errors, including KeyboardInterrupts, so it is
+                    # difficult to stop the program. It should catch ValueError
                     pass
-            Symbol = self.__GetSymbolFromUser()
-            self.__SymbolsLeft -= 1
-            CurrentCell = self.__GetCell(Row, Column)
-            if CurrentCell.CheckSymbolAllowed(Symbol):
-                CurrentCell.ChangeSymbolInCell(Symbol)
-                AmountToAddToScore = self.CheckforMatchWithPattern(Row, Column)
-                if AmountToAddToScore > 0:
+            Symbol = self.__GetSymbolFromUser()  # This prompts the user to input a value. This handles the inputted
+            # symbol not being a valid symbol in the game only. This does not check whether it is allowed for the
+            # specific cell.
+            self.__SymbolsLeft -= 1  # This reduces the number of symbols they have left by one, and, consequently, the
+            # number of remaining turns they have. This runs regardless of whether the entered cell is valid in the
+            # selected tile.
+            CurrentCell = self.__GetCell(Row, Column)  # Get value of the cell entered by the user. If it is not a valid
+            # cell it raises IndexError
+            if CurrentCell.CheckSymbolAllowed(Symbol):  # This checks that the symbol that the user entered can be
+                # placed in the selected cell.
+                CurrentCell.ChangeSymbolInCell(Symbol)  # If the symbol is valid, it changes the symbol in the cell to
+                # the one that was entered.
+                AmountToAddToScore = self.CheckforMatchWithPattern(Row, Column)  # Check whether the new symbol created
+                # a pattern. If it did, CheckforMatchWithPattern() returns 10 (hard-coded), and if it did not, it
+                # returns 0. This then increases the user's score by this amount, so a pattern increases by 10, and no
+                # match has not effect.
+                if AmountToAddToScore > 0:  # This then increases the score by the amount. The if doesn't achieve
+                    # anything, as adding 0 would not have an effect, which would be more space and time efficient.
                     self.__Score += AmountToAddToScore
-            if self.__SymbolsLeft == 0:
-                Finished = True
-        print()
+            if self.__SymbolsLeft == 0:  # If the number of symbols left is 0, the user can not place any more cells, so
+                # this is the end of the game.
+                Finished = True  # This stops the game from looping again
+        print()  # Just for formatting
         self.DisplayPuzzle()
         print()
-        return self.__Score
+        return self.__Score  # Returns the user's score to be displayed in the main function.
 
     def __GetCell(self, Row, Column):
         Index = (self.__GridSize - Row) * self.__GridSize + Column - 1
         if Index >= 0:
             return self.__Grid[Index]
-        else:
+        else:  # This does not achieve anything, as the previous line would raise the same error if the clause was not
+            # met.
             raise IndexError()
 
     def CheckforMatchWithPattern(self, Row, Column):

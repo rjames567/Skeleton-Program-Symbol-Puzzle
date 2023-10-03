@@ -229,7 +229,8 @@ class Puzzle():  # Create Puzzle Class. Does not inherit from another class
             # number of remaining turns they have. This runs regardless of whether the entered cell is valid in the
             # selected tile.
             CurrentCell = self.__GetCell(Row, Column)  # Get value of the cell entered by the user. If it is not a valid
-            # cell it raises IndexError
+            # cell it raises IndexError. If an invalid location is entered, the IndexError is raised, and the program
+            # crashes.
             if CurrentCell.CheckSymbolAllowed(Symbol):  # This checks that the symbol that the user entered can be
                 # placed in the selected cell.
                 CurrentCell.ChangeSymbolInCell(Symbol)  # If the symbol is valid, it changes the symbol in the cell to
@@ -250,12 +251,16 @@ class Puzzle():  # Create Puzzle Class. Does not inherit from another class
         return self.__Score  # Returns the user's score to be displayed in the main function.
 
     def __GetCell(self, Row, Column):
-        Index = (self.__GridSize - Row) * self.__GridSize + Column - 1
-        if Index >= 0:
+        Index = (self.__GridSize - Row) * self.__GridSize + Column - 1  # Convert the entered rows and columns to a
+        # corresponding index for the one dimensional array that it is stored in.
+        if Index >= 0:  # Checks that the index is greater than 0. If a negative value was entered, it would be the nth
+            # index from the END of the list. This would mean that -GridSize<=n<GridSize would not raise errors. Note
+            # that -GridSize would give the first item, and GridSize-1 would give the last item
             return self.__Grid[Index]
-        else:  # This does not achieve anything, as the previous line would raise the same error if the clause was not
-            # met.
-            raise IndexError()
+        else:  # This ensures that any negative values are not allowed, as they could access from the end of the grid.
+            raise IndexError()  # This is the same error that is raised if the location entered is outside the grid.
+
+        # If the Index is not in the range 0<=Index<GridSize, it raises an IndexError.
 
     def CheckforMatchWithPattern(self, Row, Column):
         for StartRow in range(Row + 2, Row - 1, -1):

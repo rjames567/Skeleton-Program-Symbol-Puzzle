@@ -263,22 +263,43 @@ class Puzzle():  # Create Puzzle Class. Does not inherit from another class
         # If the Index is not in the range 0<=Index<GridSize, it raises an IndexError.
 
     def CheckforMatchWithPattern(self, Row, Column):
-        for StartRow in range(Row + 2, Row - 1, -1):
-            for StartColumn in range(Column - 2, Column + 1):
-                try:
+        for StartRow in range(Row + 2, Row - 1, -1):  # This will run three times - Row + 2, Row + 1, Row, as the first
+            # parameter of range is inclusive, second is exclusive. The third parameter shows that it should decrease
+            # each time. This checks all possible pattern locations vertically, where the entered cell is the last item,
+            # middle item, or top item in that order. The StartRow variable indicates the first row of the pattern.
+            for StartColumn in range(Column - 2, Column + 1):  # This will run three times - Column-2, Column-1, Column,
+                # as the first parameter is inclusive, and second is exclusive. This checks all possible options, with
+                # the entered cell being the left, center and middle of the pattern, in that order. The combination of
+                # the two for loops check every possible pattern with the entered cell in any position within it.
+                try:  # Catch all errors that come from generating the pattern string.
                     PatternString = ""
-                    PatternString += self.__GetCell(StartRow, StartColumn).GetSymbol()
-                    PatternString += self.__GetCell(StartRow, StartColumn + 1).GetSymbol()
+                    PatternString += self.__GetCell(StartRow, StartColumn).GetSymbol()  # Get the value of the cell
+                    # indicated by the StartRow and Column.
+                    PatternString += self.__GetCell(StartRow, StartColumn + 1).GetSymbol()  # Read the symbols in a
+                    # spiral, see order below.
                     PatternString += self.__GetCell(StartRow, StartColumn + 2).GetSymbol()
                     PatternString += self.__GetCell(StartRow - 1, StartColumn + 2).GetSymbol()
                     PatternString += self.__GetCell(StartRow - 2, StartColumn + 2).GetSymbol()
                     PatternString += self.__GetCell(StartRow - 2, StartColumn + 1).GetSymbol()
                     PatternString += self.__GetCell(StartRow - 2, StartColumn).GetSymbol()
                     PatternString += self.__GetCell(StartRow - 1, StartColumn).GetSymbol()
-                    PatternString += self.__GetCell(StartRow - 1, StartColumn + 1).GetSymbol()
-                    for P in self.__AllowedPatterns:
-                        CurrentSymbol = self.__GetCell(Row, Column).GetSymbol()
-                        if P.MatchesPattern(PatternString, CurrentSymbol):
+                    PatternString += self.__GetCell(StartRow - 1, StartColumn + 1).GetSymbol()  # If any of these are
+                    # outside of the grid, it will then raise an IndexError, which is caught and moves automatically to
+                    # the next iteration, without processing any subsequent steps
+
+                    # -------------
+                    # | 1 | 2 | 3 |
+                    # -------------
+                    # | 8 | 9 | 4 |
+                    # -------------
+                    # | 7 | 6 | 5 |
+                    # -------------
+
+                    for P in self.__AllowedPatterns:  # Iterates through all the pattern objects that are valid
+                        CurrentSymbol = self.__GetCell(Row, Column).GetSymbol()  # This gets the symbol that the pattern
+                        # is for (the shape of the pattern must match the symbol entered).
+                        if P.MatchesPattern(PatternString, CurrentSymbol):  # This checks whether the pattern that was
+                            # found is valid for the current pattern in the list of valid patterns.
                             self.__GetCell(StartRow, StartColumn).AddToNotAllowedSymbols(CurrentSymbol)
                             self.__GetCell(StartRow, StartColumn + 1).AddToNotAllowedSymbols(CurrentSymbol)
                             self.__GetCell(StartRow, StartColumn + 2).AddToNotAllowedSymbols(CurrentSymbol)
@@ -287,11 +308,20 @@ class Puzzle():  # Create Puzzle Class. Does not inherit from another class
                             self.__GetCell(StartRow - 2, StartColumn + 1).AddToNotAllowedSymbols(CurrentSymbol)
                             self.__GetCell(StartRow - 2, StartColumn).AddToNotAllowedSymbols(CurrentSymbol)
                             self.__GetCell(StartRow - 1, StartColumn).AddToNotAllowedSymbols(CurrentSymbol)
-                            self.__GetCell(StartRow - 1, StartColumn + 1).AddToNotAllowedSymbols(CurrentSymbol)
-                            return 10
-                except:
+                            self.__GetCell(StartRow - 1, StartColumn + 1).AddToNotAllowedSymbols(CurrentSymbol)  # For
+                            # each of the cells in the pattern, it prevents the user placing that symbol there again,
+                            # even if the piece is removed and overwitten to a different value.
+                            return 10  # Return a score of 10 points. This also stops the function executing, which, if
+                            # the new cell completes multiple shapes, would only give 10 points, as the function stops
+                            # as soon as one match is found. This could be fixed by having a variable that starts at 0
+                            # and is increased by 10 every time a match is found.
+                except:  # If an error is raised, it skips to the next iteration of the loop, as the error would be an
+                    # index error, which would indicate that it the target cell is not in the grid. This then means that
+                    # the pattern it was generating cannot be valid, so it skips to the next. It does not specify
+                    # IndexError, which is bad practice as it catches any exception that occurs.
                     pass
-        return 0
+        return 0  # If no matches are found, it returns 0 points. It cannot get to this point if a match is found, as
+        # the return 10 statement when a match is found would stop the function executing further.
 
     def __GetSymbolFromUser(self):
         Symbol = ""

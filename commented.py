@@ -419,9 +419,14 @@ class Cell():
 
     def CheckSymbolAllowed(self, SymbolToCheck):
         for Item in self.__SymbolsNotAllowed:
-            if Item == SymbolToCheck:
+            if Item == SymbolToCheck:  # Performs a linear search on the list of invalid symbols. If it is present, the
+                # symbol is not allowed, so returns false
                 return False
-        return True
+        return True  # If it was not found by the search, it returns True. If it was found by the searhc, the execution
+        # of the subroutine stops, so it must be true.
+
+        # It could be simplified by using
+        # return not(Item in self._SymbolsNotAllowed)
 
     def AddToNotAllowedSymbols(self, SymbolToAdd):
         self.__SymbolsNotAllowed.append(SymbolToAdd)

@@ -310,7 +310,7 @@ class Puzzle():  # Create Puzzle Class. Does not inherit from another class
                             self.__GetCell(StartRow - 1, StartColumn).AddToNotAllowedSymbols(CurrentSymbol)
                             self.__GetCell(StartRow - 1, StartColumn + 1).AddToNotAllowedSymbols(CurrentSymbol)  # For
                             # each of the cells in the pattern, it prevents the user placing that symbol there again,
-                            # even if the piece is removed and overwitten to a different value.
+                            # even if the piece is removed and overwritten to a different value.
                             return 10  # Return a score of 10 points. This also stops the function executing, which, if
                             # the new cell completes multiple shapes, would only give 10 points, as the function stops
                             # as soon as one match is found. This could be fixed by having a variable that starts at 0
@@ -324,10 +324,12 @@ class Puzzle():  # Create Puzzle Class. Does not inherit from another class
         # the return 10 statement when a match is found would stop the function executing further.
 
     def __GetSymbolFromUser(self):
-        Symbol = ""
-        while not Symbol in self.__AllowedSymbols:
+        Symbol = ""  # Set the symbol to an empty string, which should not be in the list of allowed symbols. This
+        # guarantees the while loop runs at least once.
+        while not Symbol in self.__AllowedSymbols:  # This loops the input until the user inputs a value that is in the
+            # list of allowed symbols
             Symbol = input("Enter symbol: ")
-        return Symbol
+        return Symbol  # Return the symbol that the user entered. (This is validated)
 
     def __CreateHorizontalLine(self):
         Line = "  "

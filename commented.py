@@ -341,7 +341,7 @@ class Puzzle():  # Create Puzzle Class. Does not inherit from another class
             Line = Line + "-"  # Add another dash to the string
         return Line  # Return the horizontal line that was generated.
 
-        # This entire subrouting could be simplified to a one-liner
+        # This entire subroutine could be simplified to a one-liner
         # return "  " + ("-" * (self.__GridSize * 2 + 1))
 
     def DisplayPuzzle(self):

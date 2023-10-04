@@ -431,7 +431,7 @@ class Cell():
     def AddToNotAllowedSymbols(self, SymbolToAdd):
         self.__SymbolsNotAllowed.append(SymbolToAdd)
 
-    def UpdateCell(self):
+    def UpdateCell(self):  # This method is never used. This may be an exam question.
         pass
 
 

@@ -397,14 +397,16 @@ class Pattern():
 
 class Cell():
     def __init__(self):
-        self._Symbol = ""
+        self._Symbol = ""  # By default, the cell is empty. This is shown by Symbol being an empty string.
         self.__SymbolsNotAllowed = []
 
     def GetSymbol(self):
-        if self.IsEmpty():
-            return "-"
+        # This method is used to get the representation of the contents of the cell to display in the grid.
+        if self.IsEmpty():  # If the cell is empty, it should be displayed in the grid as a dash.
+            return "-"  # Return the dash as the symbol to use as the representation of the contents of the cell.
         else:
-            return self._Symbol
+            return self._Symbol  # If it is not empty, the value that is in the string is the same as what should be
+            # used to represent the cell's contents in the grid.
 
     def IsEmpty(self):
         if len(self._Symbol) == 0:

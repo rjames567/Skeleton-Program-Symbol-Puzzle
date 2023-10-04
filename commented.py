@@ -284,7 +284,7 @@ class Puzzle():  # Create Puzzle Class. Does not inherit from another class
                     PatternString += self.__GetCell(StartRow - 2, StartColumn).GetSymbol()
                     PatternString += self.__GetCell(StartRow - 1, StartColumn).GetSymbol()
                     PatternString += self.__GetCell(StartRow - 1, StartColumn + 1).GetSymbol()  # If any of these are
-                    # outside of the grid, it will then raise an IndexError, which is caught and moves automatically to
+                    # outside the grid, it will then raise an IndexError, which is caught and moves automatically to
                     # the next iteration, without processing any subsequent steps
 
                     # -------------
@@ -332,10 +332,17 @@ class Puzzle():  # Create Puzzle Class. Does not inherit from another class
         return Symbol  # Return the symbol that the user entered. (This is validated)
 
     def __CreateHorizontalLine(self):
-        Line = "  "
-        for Count in range(1, self.__GridSize * 2 + 2):
-            Line = Line + "-"
-        return Line
+        # The horizonal line is the dashed line in the grid table.
+        Line = "  "  # Start with two spaces as the Line, so it does not cover the indexes at the side of the grid,
+        # which take two character spaces (number and space).
+        for Count in range(1, self.__GridSize * 2 + 2):  # Run GridSize*2 + 1 times. the first value is inclusive, and
+            # the second is exclusive, so it is plus 2 instead of plus 1. This loop creates a string of (GridSize * 2)+1
+            # dashes with two leading spaces.
+            Line = Line + "-"  # Add another dash to the string
+        return Line  # Return the horizontal line that was generated.
+
+        # This entire subrouting could be simplified to a one-liner
+        # return "  " + ("-" * (self.__GridSize * 2 + 1))
 
     def DisplayPuzzle(self):
         print()

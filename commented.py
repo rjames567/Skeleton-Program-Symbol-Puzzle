@@ -19,8 +19,8 @@ def Main():
             # loaded from the file
             MyPuzzle = Puzzle(Filename + ".txt")  # This loads the puzzle from the file. It adds the file extension, so
             # the user does not need to remember it. This does catch all exceptions from loading the file, but does not
-            # re-prompt the user, instead getting stuck in a loop of asking for a symbol (as there is not a list of valid
-            # characters).
+            # re-prompt the user, instead getting stuck in a loop of asking for a symbol (as there is not a list of
+            # valid characters).
         else:
             MyPuzzle = Puzzle(8, int(8 * 8 * 0.6)) # Creates the default game. First argument is the grid size, and
             # the second is the number of remaining symbols (number of turns). It is grid size (x) * grid size (y) *
@@ -345,20 +345,29 @@ class Puzzle():  # Create Puzzle Class. Does not inherit from another class
         # return "  " + ("-" * (self.__GridSize * 2 + 1))
 
     def DisplayPuzzle(self):
-        print()
-        if self.__GridSize < 10:
-            print("  ", end='')
-            for Count in range(1, self.__GridSize + 1):
-                print(" " + str(Count), end='')
-        print()
-        print(self.__CreateHorizontalLine())
-        for Count in range(0, len(self.__Grid)):
-            if Count % self.__GridSize == 0 and self.__GridSize < 10:
-                print(str(self.__GridSize - ((Count + 1) // self.__GridSize)) + " ", end='')
-            print("|" + self.__Grid[Count].GetSymbol(), end='')
-            if (Count + 1) % self.__GridSize == 0:
-                print("|")
-                print(self.__CreateHorizontalLine())
+        print()  # Add a blank line above the grid
+        if self.__GridSize < 10:  # Check whether the GridSize is less than 10. If it is the locations can be displayed
+            # as a single digit, so would not break the grid, and should, therefore, be displayed.
+            print("  ", end='')  # Print two spaces to account for the indexes for rows.
+            for Count in range(1, self.__GridSize + 1): # Iterates from 1 to GridSize.
+                print(" " + str(Count), end='') # Display the column (shown by count). The space before handles the |
+                # seperator between columns
+        # The end='' parameter in the print prevents it creating a new line the next output to be on.
+        print()  # Create a new line, which removes the effect of the end='' on the previous print.
+        print(self.__CreateHorizontalLine())  # Print the horizontal line.
+        for Count in range(0, len(self.__Grid)):  # Iterate GridSize^2 times.
+            if Count % self.__GridSize == 0 and self.__GridSize < 10:  # Checks whether the current count is a multiple
+                # of 8. If it is, then it is the start of a new row in the grid, so the row count should be displayed.
+                print(str(self.__GridSize - ((Count + 1) // self.__GridSize)) + " ", end='')  # Convert the count to a
+                # row count, and add a space on the end for padding between the row number and the grid. The end
+                # parameter ensures that the subsequent print statement output is on the same line.
+            print("|" + self.__Grid[Count].GetSymbol(), end='')  # Print the separating character, and the symbol from
+            # the current cell in the Grid iteration to the line. end='' ensures that the next value is printed on the
+            # same line.
+            if (Count + 1) % self.__GridSize == 0:  # Checks if the current Count is the end of the row.
+                print("|")  # Adds the separating character on the end of the line, and ensures the print is on the next
+                # line.
+                print(self.__CreateHorizontalLine())  # Output the line to seperate the current row and the next row
 
 
 class Pattern():

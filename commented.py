@@ -409,8 +409,8 @@ class Cell():
             # used to represent the cell's contents in the grid.
 
     def IsEmpty(self):
-        if len(self._Symbol) == 0:
-            return True
+        if len(self._Symbol) == 0:  # If the cell is empty Symbol is empty string, so has a length of 0.
+            return True  # If the length is 0, it is empty.
         else:
             return False
 

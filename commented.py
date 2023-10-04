@@ -238,7 +238,7 @@ class Puzzle():  # Create Puzzle Class. Does not inherit from another class
                 AmountToAddToScore = self.CheckforMatchWithPattern(Row, Column)  # Check whether the new symbol created
                 # a pattern. If it did, CheckforMatchWithPattern() returns 10 (hard-coded), and if it did not, it
                 # returns 0. This then increases the user's score by this amount, so a pattern increases by 10, and no
-                # match has not effect.
+                # match has no effect.
                 if AmountToAddToScore > 0:  # This then increases the score by the amount. The if doesn't achieve
                     # anything, as adding 0 would not have an effect, which would be more space and time efficient.
                     self.__Score += AmountToAddToScore
@@ -332,7 +332,7 @@ class Puzzle():  # Create Puzzle Class. Does not inherit from another class
         return Symbol  # Return the symbol that the user entered. (This is validated)
 
     def __CreateHorizontalLine(self):
-        # The horizonal line is the dashed line in the grid table.
+        # The horizontal line is the dashed line in the grid table.
         Line = "  "  # Start with two spaces as the Line, so it does not cover the indexes at the side of the grid,
         # which take two character spaces (number and space).
         for Count in range(1, self.__GridSize * 2 + 2):  # Run GridSize*2 + 1 times. the first value is inclusive, and
@@ -367,7 +367,7 @@ class Puzzle():  # Create Puzzle Class. Does not inherit from another class
             if (Count + 1) % self.__GridSize == 0:  # Checks if the current Count is the end of the row.
                 print("|")  # Adds the separating character on the end of the line, and ensures the print is on the next
                 # line.
-                print(self.__CreateHorizontalLine())  # Output the line to seperate the current row and the next row
+                print(self.__CreateHorizontalLine())  # Output the line to separate the current row and the next row
 
 
 class Pattern():
@@ -389,7 +389,7 @@ class Pattern():
             except Exception as ex:  # If there is an exception it catches it and prints it. Not sure why this is here,
                 # as the code should not raise errors that need to be caught, so this looks like a debugging message.
                 print(f"EXCEPTION in MatchesPattern: {ex}")
-        return True  # It cannot get to this point if it is proven to be a invalid match, so it must be true.
+        return True  # It cannot get to this point if it is proven to be an invalid match, so it must be true.
 
     def GetPatternSequence(self):
         return self.__PatternSequence
@@ -422,7 +422,7 @@ class Cell():
             if Item == SymbolToCheck:  # Performs a linear search on the list of invalid symbols. If it is present, the
                 # symbol is not allowed, so returns false
                 return False
-        return True  # If it was not found by the search, it returns True. If it was found by the searhc, the execution
+        return True  # If it was not found by the search, it returns True. If it was found by the search, the execution
         # of the subroutine stops, so it must be true.
 
         # It could be simplified by using

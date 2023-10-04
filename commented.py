@@ -436,11 +436,14 @@ class Cell():
 
 
 class BlockedCell(Cell):
+    # Inherits from the Cell class
     def __init__(self):
         super(BlockedCell, self).__init__()
-        self._Symbol = "@"
+        self._Symbol = "@"  # A blocked cell is represented using an @ symbol. This is overwritten from the superclass __init__ function
 
     def CheckSymbolAllowed(self, SymbolToCheck):
+        # Overwrite the CheckSymbolAllowed method from the Cell class.
+        # A blocked cell cannot have a piece placed in it, so any values entered must be false.
         return False
 
 

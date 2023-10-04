@@ -376,15 +376,20 @@ class Pattern():
         self.__PatternSequence = PatternString
 
     def MatchesPattern(self, PatternString, SymbolPlaced):
-        if SymbolPlaced != self.__Symbol:
+        if SymbolPlaced != self.__Symbol:  # For a pattern to be valid, the symbol placed must be the same as pattern
+            # symbol. If it is not the same, it is not a valid result, so returns False
             return False
-        for Count in range(0, len(self.__PatternSequence)):
+        for Count in range(0, len(self.__PatternSequence)):  # Iterate through the sequence string.
             try:
-                if self.__PatternSequence[Count] == self.__Symbol and PatternString[Count] != self.__Symbol:
+                if self.__PatternSequence[Count] == self.__Symbol and PatternString[Count] != self.__Symbol:  # Checks
+                    # if the symbol in the pattern string matches the pattern symbol, and the entered pattern string is
+                    # NOT equal to the symbol. This checks that the entered symbol at the current location does NOT
+                    # match the correct symbol if the correct pattern does.
                     return False
-            except Exception as ex:
+            except Exception as ex:  # If there is an exception it catches it and prints it. Not sure why this is here,
+                # as the code should not raise errors that need to be caught, so this looks like a debugging message.
                 print(f"EXCEPTION in MatchesPattern: {ex}")
-        return True
+        return True  # It cannot get to this point if it is proven to be a invalid match, so it must be true.
 
     def GetPatternSequence(self):
         return self.__PatternSequence

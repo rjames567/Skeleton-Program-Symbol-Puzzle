@@ -112,6 +112,8 @@ class Puzzle():
                     self.__Score += AmountToAddToScore
             if self.__SymbolsLeft == 0:
                 Finished = True
+            else:
+                os.system("clear")
         print()
         self.DisplayPuzzle()
         print()

@@ -171,6 +171,24 @@ class Puzzle():
         return line + "+"
 
     def DisplayPuzzle(self):
+        string1 = "| Number of remaining turns: " + str(self.__SymbolsLeft) + " "
+        string2 = "| Available symbols: " + ", ".join(self.__AllowedSymbols) + " "
+        len_s1 = len(string1)
+        len_s2 = len(string2)
+
+        num = max(len_s1, len_s2) - 1
+
+        if len_s1 > len_s2:
+            string2 += " " * (len_s1-len_s2) + "|"
+            string1 += "|"
+        else:
+            string1 += " " * (len_s2 - len_s1) + "|"
+            string2 += "|"
+
+        print("+" + "-" * num + "+")
+        print(string1)
+        print(string2)
+        print("+" + "-" * num + "+\n")
         print(self.__CreateHorizontalLine())
         print("| +", end=" ")
         for count in range(self.__GridSize, 0, -1):
@@ -180,7 +198,7 @@ class Puzzle():
             print(self.__CreateHorizontalLine())
             print("| " + str(self.__GridSize - (row)), end=" ")
             for col in range(self.__GridSize):
-                print("| " + self.__Grid[row + col].GetSymbol(), end=" ")
+                print("| " + self.__Grid[(row * self.__GridSize) + (self.__GridSize - 1 - col)].GetSymbol(), end=" ")
             print("|")
         print(self.__CreateHorizontalLine())
 

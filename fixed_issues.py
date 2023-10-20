@@ -163,27 +163,26 @@ class Puzzle():
         return Symbol
 
     def __CreateHorizontalLine(self):
-        Line = "  "
-        for Count in range(1, self.__GridSize * 2 + 2):
-            Line = Line + "-"
-        return Line
+        # Line = "  "
+        # for Count in range(1, self.__GridSize * 2 + 2):
+        #     Line = Line + "-"
+        # return Line
+        line = "+---" * (self.__GridSize + 1)
+        return line + "+"
 
     def DisplayPuzzle(self):
-        print()
-        if self.__GridSize < 10:
-            print("  ", end='')
-            for Count in range(1, self.__GridSize + 1):
-                print(" " + str(Count), end='')
-        print()
         print(self.__CreateHorizontalLine())
-        for Count in range(0, len(self.__Grid)):
-            if Count % self.__GridSize == 0 and self.__GridSize < 10:
-                print(str(self.__GridSize - ((Count + 1) // self.__GridSize)) + " ", end='')
-            print("|" + self.__Grid[Count].GetSymbol(), end='')
-            if (Count + 1) % self.__GridSize == 0:
-                print("|")
-                print(self.__CreateHorizontalLine())
-
+        print("| +", end=" ")
+        for count in range(self.__GridSize, 0, -1):
+            print("| " + str(count), end=" ")
+        print("|")
+        for row in range(0, len(self.__Grid) // self.__GridSize):
+            print(self.__CreateHorizontalLine())
+            print("| " + str(self.__GridSize - (row)), end=" ")
+            for col in range(self.__GridSize):
+                print("| " + self.__Grid[row + col].GetSymbol(), end=" ")
+            print("|")
+        print(self.__CreateHorizontalLine())
 
 class Pattern():
     def __init__(self, SymbolToUse, PatternString):

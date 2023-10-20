@@ -86,7 +86,6 @@ class Puzzle():
         Finished = False
         while not Finished:
             self.DisplayPuzzle()
-            print("Current score: " + str(self.__Score))
             Row = -1
             Valid = False
             while not Valid:
@@ -171,24 +170,22 @@ class Puzzle():
         return line + "+"
 
     def DisplayPuzzle(self):
-        string1 = "| Number of remaining turns: " + str(self.__SymbolsLeft) + " "
-        string2 = "| Available symbols: " + ", ".join(self.__AllowedSymbols) + " "
-        len_s1 = len(string1)
-        len_s2 = len(string2)
+        string1 = "| Number of remaining turns: " + str(self.__SymbolsLeft)
+        string2 = "| Available symbols: " + ", ".join(self.__AllowedSymbols)
+        string3 = "| Current score: " + str(self.__Score)
 
-        num = max(len_s1, len_s2) - 1
+        num = max(len(string3), len(string2), len(string1))
 
-        if len_s1 > len_s2:
-            string2 += " " * (len_s1-len_s2) + "|"
-            string1 += "|"
-        else:
-            string1 += " " * (len_s2 - len_s1) + "|"
-            string2 += "|"
+        string1 = string1.ljust(num) + " |"
+        string2 = string2.ljust(num) + " |"
+        string3 = string3.ljust(num) + " |"
 
         print("+" + "-" * num + "+")
         print(string1)
         print(string2)
+        print(string3)
         print("+" + "-" * num + "+\n")
+
         print(self.__CreateHorizontalLine())
         print("| +", end=" ")
         for count in range(self.__GridSize, 0, -1):

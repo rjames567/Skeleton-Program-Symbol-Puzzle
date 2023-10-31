@@ -91,7 +91,8 @@ class Puzzle():
             while not Valid:
                 try:
                     Row = int(input("Enter row number: "))
-                    Valid = True
+                    if 1 <= Row <= self.__GridSize:
+                        Valid = True
                 except:
                     pass
             Column = -1
@@ -99,7 +100,8 @@ class Puzzle():
             while not Valid:
                 try:
                     Column = int(input("Enter column number: "))
-                    Valid = True
+                    if 1 <= Row <= self.__GridSize:
+                        Valid = True
                 except:
                     pass
             Symbol = self.__GetSymbolFromUser()

@@ -87,7 +87,9 @@ class Puzzle():
         while not Finished:
             self.DisplayPuzzle()
             print("Current score: " + str(self.__Score))
+########################################################################################################################
             remove = input("Remove Cell (y/n): ").lower() == "y"
+########################################################################################################################
             Row = -1
             Valid = False
             while not Valid:
@@ -104,6 +106,7 @@ class Puzzle():
                     Valid = True
                 except:
                     pass
+########################################################################################################################
             CurrentCell = self.__GetCell(Row, Column)
             if remove:
                 if CurrentCell.RemoveSymbol():
@@ -121,6 +124,7 @@ class Puzzle():
                         self.__Score += AmountToAddToScore
                 if self.__SymbolsLeft == 0:
                     Finished = True
+########################################################################################################################
         print()
         self.DisplayPuzzle()
         print()
@@ -233,12 +237,14 @@ class Cell():
     def ChangeSymbolInCell(self, NewSymbol):
         self._Symbol = NewSymbol
 
+########################################################################################################################
     def RemoveSymbol(self):
         if ((self.IsEmpty() or self._Symbol == "@") or
                 not self.CheckSymbolAllowed(self._Symbol)):
             return 0
         self._Symbol = ""
         return 1
+########################################################################################################################
 
     def CheckSymbolAllowed(self, SymbolToCheck):
         for Item in self.__SymbolsNotAllowed:

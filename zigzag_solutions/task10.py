@@ -113,7 +113,7 @@ class Puzzle():
                             Valid = True
                         else:
                             raise ValueError
-                    except:
+                    except ValueError:
                         print(f"Column '{Column}' isn't valid. Please enter a value between 1 and {self.__GridSize} inclusive.")
                 Symbol = self.__GetSymbolFromUser()
                 CurrentCell = self.__GetCell(Row, Column)

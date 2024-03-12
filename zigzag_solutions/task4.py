@@ -212,7 +212,6 @@ class Pattern():
         if self.__PatternCount is not None:
             self.__PatternCount -= 1
         return True
-
 ########################################################################################################################
 
     def GetPatternSequence(self):
